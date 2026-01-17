@@ -77,5 +77,14 @@ def GetTimestamp():
     return str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
 
+# Functions to control Pi zero built in LED
+def TurnLEDOn():
+    os.system(f"echo 1 | sudo tee {ledBrightness}")
+
+
+def TurnLEDOff():
+    os.system(f"echo 0 | sudo tee {ledBrightness}")
+
+
 # Call main function
 main()
