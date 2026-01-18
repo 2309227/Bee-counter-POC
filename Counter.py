@@ -3,25 +3,37 @@
 # Import necessary libraries
 import time
 import os
-import RPi.GPIO as GPIO
 
+# Import and set up relevent GPIO pins on Pi
+import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+# Paths for system calls to control built in LED
 ledTrigger = "/sys/class/leds/ACT/trigger"
 ledBrightness = "/sys/class/leds/ACT/brightness"
+
+# Functions to control Pi zero built in LED
+def TurnLEDOn():
+    os.system(f"echo 1 | sudo tee {ledBrightness}")
+
+
+def TurnLEDOff():
+    os.system(f"echo 0 | sudo tee {ledBrightness}")
 
 # Wait until the pin is HIGH before starting
 os.system(f"echo none | sudo tee {ledTrigger}")
 
 print("Waiting for pin 11 to go HIGH to start...")
 
+# Loop until pin 11 is high 
 while GPIO.input(11) != GPIO.HIGH:
-    os.system(f"echo 0 | sudo tee {ledBrightness}")
+    TurnLEDOff()
     time.sleep(0.05)
-print("Pin is HIGH, starting detection...")
 
-os.system(f"echo 1 | sudo tee {ledBrightness}")
+print("Pin is HIGH, starting detection...")
+TurnLEDOn()
+
 prev_state = GPIO.input(11)
 
 
@@ -77,13 +89,7 @@ def GetTimestamp():
     return str(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
 
 
-# Functions to control Pi zero built in LED
-def TurnLEDOn():
-    os.system(f"echo 1 | sudo tee {ledBrightness}")
 
-
-def TurnLEDOff():
-    os.system(f"echo 0 | sudo tee {ledBrightness}")
 
 
 # Call main function
