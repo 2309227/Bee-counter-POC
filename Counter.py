@@ -34,7 +34,7 @@ while GPIO.input(11) != GPIO.HIGH:
     time.sleep(0.05)
 
 TurnLEDOn()
-
+#Test
 prev_state = GPIO.input(11)
 
 
